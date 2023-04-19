@@ -53,7 +53,7 @@ public class PatientController {
     }
     @PostMapping("/admin/savePatient")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String savePatient(@Valid Patient patient,
+    public String savePatient(Model model,@Valid Patient patient,
                               BindingResult bindingResult,
                               @RequestParam(defaultValue = "") String keyword,
                               @RequestParam(defaultValue = "0") int  page){
@@ -65,8 +65,11 @@ public class PatientController {
     }
     @GetMapping("/admin/editPatient")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String editPatient(@RequestParam(name = "id") Long id, Model model, String keyword, int page){
-        Patient patient=patientRepository.findById(id).get();
+    public String editPatient(@RequestParam(name = "id") Long id,
+                              Model model,
+                              String keyword,
+                              int page){
+        Patient patient = patientRepository.findById(id).orElse(null);
         if (patient == null) throw new RuntimeException("no patients with that ID");
         model.addAttribute("patient",patient);
         model.addAttribute("page", page);
